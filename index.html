@@ -22,10 +22,7 @@
       background: var(--bg);
       color: var(--fg);
       min-height: 100vh;
-      overflow-x: hidden;
       transition: background .4s, color .4s;
-      display: flex;
-      flex-direction: column;
     }
 
     header {
@@ -42,8 +39,8 @@
       position: relative;
     }
     .menu-btn {
-      width: 45px;
-      height: 45px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       border: 2px solid var(--fg);
       background: var(--bg);
@@ -51,7 +48,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       transition: transform .3s;
     }
     .menu.open .menu-btn { transform: rotate(90deg); }
@@ -63,33 +60,32 @@
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
-      gap: .5rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s, transform .3s;
-    }
-    .menu.open .menu-items {
-      opacity: 1;
-      pointer-events: all;
-      transform: translateY(-50%) translateX(0);
+      gap: .6rem;
     }
     .menu-items button {
       border: 1px solid var(--fg);
       background: var(--bg);
       color: var(--fg);
       border-radius: 999px;
-      padding: .3rem .8rem;
+      padding: .4rem .9rem;
       cursor: pointer;
-      transition: background .3s, color .3s;
+      opacity: 0;
+      transform: translateX(30px);
+      pointer-events: none;
+      transition: opacity .3s, transform .3s;
+    }
+    .menu.open .menu-items button {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: all;
     }
     .menu-items button:hover {
       background: var(--fg);
       color: var(--bg);
     }
 
-    /* контейнер плиток */
+    /* плитки */
     .tiles {
-      flex: 1;
       display: flex;
       justify-content: center;
       align-items: flex-end;
@@ -97,7 +93,7 @@
       padding: 2rem;
       opacity: 0;
       transform: translateY(50px);
-      animation: slideUp .8s ease forwards .3s;
+      animation: slideUp .8s ease forwards .4s;
     }
     @keyframes slideUp {
       to { opacity: 1; transform: translateY(0); }
@@ -131,9 +127,8 @@
     <h1>Азкары</h1>
     <div class="menu" id="menu">
       <div class="menu-btn">⚪</div>
-      <div class="menu-items">
-        <button id="toggle-theme">🌙/☀️ Тема</button>
-        <button>О сайте</button>
+      <div class="menu-items" id="menu-items">
+        <!-- кнопки будут добавляться из JS -->
       </div>
     </div>
   </header>
@@ -152,16 +147,44 @@
   </section>
 
   <script>
-    // меню
+    // пункты меню
+    const menuItemsConfig = [
+      { text: "🌙/☀️ Тема", action: "theme" },
+      { text: "Утренние", action: "morning" },
+      { text: "Вечерние", action: "evening" },
+      { text: "О сайте", action: "about" }
+    ];
+
     const menu = document.getElementById('menu');
+    const menuItemsEl = document.getElementById('menu-items');
+
+    // генерируем кнопки меню
+    menuItemsConfig.forEach(item => {
+      const btn = document.createElement('button');
+      btn.textContent = item.text;
+      btn.addEventListener('click', () => handleMenu(item.action));
+      menuItemsEl.appendChild(btn);
+    });
+
+    // открытие/закрытие меню
     menu.querySelector('.menu-btn').addEventListener('click', () => {
       menu.classList.toggle('open');
     });
 
-    // тема
-    document.getElementById('toggle-theme').addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-    });
+    function handleMenu(action) {
+      if (action === "theme") {
+        document.documentElement.classList.toggle('dark');
+      }
+      if (action === "morning") {
+        alert("Перейти к утренним азкарам");
+      }
+      if (action === "evening") {
+        alert("Перейти к вечерним азкарам");
+      }
+      if (action === "about") {
+        alert("О сайте...");
+      }
+    }
 
     // плитки
     document.getElementById('morning').addEventListener('click', () => {
